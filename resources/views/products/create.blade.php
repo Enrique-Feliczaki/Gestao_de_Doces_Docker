@@ -114,6 +114,7 @@
 </head>
 <body>
     <main class="container">
+        @include('layouts.navigation')
         <div class="card">
             <h1>Novo produto</h1>
             <p class="subtitle">Preencha os dados para cadastrar um produto.</p>

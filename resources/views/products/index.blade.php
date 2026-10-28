@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -67,6 +66,10 @@
             cursor: pointer;
         }
 
+        .botao:hover {
+            background: #444;
+        }
+
         .painel {
             background: #fff;
             border: 1px solid #e5e7eb;
@@ -130,6 +133,10 @@
             text-decoration: none;
         }
 
+        .link:hover {
+            text-decoration: underline;
+        }
+
         .excluir {
             background: none;
             border: 0;
@@ -161,6 +168,8 @@
     </header>
 
     <main>
+        @include('layouts.navigation')
+
         <div class="topo">
             <div>
                 <h2>Produtos</h2>
@@ -203,6 +212,7 @@
                             <tr>
                                 <td>
                                     <strong>{{ $product->name }}</strong>
+
                                     @if ($product->description)
                                         <p style="color:#777; margin-top:5px">
                                             {{ $product->description }}
