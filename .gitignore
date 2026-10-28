@@ -1,27 +1,54 @@
+
+# Logs
 *.log
+
+# Sistema operacional
 .DS_Store
+Thumbs.db
+
+# Variáveis de ambiente e segredos
 .env
-.env.backup
-.env.production
+.env.*
+!.env.example
+!.env.dusk.local
+/auth.json
+
+# PHP e Laravel
 .phpactor.json
 .phpunit.result.cache
+/.phpunit.cache
+/vendor
+_ide_helper.php
+Homestead.json
+Homestead.yaml
+
+# Editores
 /.codex
 /.cursor/
 /.idea
 /.nova
-/.phpunit.cache
 /.vscode
 /.zed
-/auth.json
+
+# Node.js e arquivos compilados
 /node_modules
 /public/build
 /public/fonts-manifest.dev.json
 /public/hot
 /public/storage
+
+# Arquivos sensíveis ou gerados pelo Laravel
 /storage/*.key
 /storage/pail
-/vendor
-_ide_helper.php
-Homestead.json
-Homestead.yaml
-Thumbs.db
+/storage/logs/*
+/bootstrap/cache/*.php
+
+# Banco SQLite local
+/database/*.sqlite
+/database/*.sqlite-*
+
+# Arquivos temporários e backups
+*.bak
+*.tmp
+*.swp
+*.orig
