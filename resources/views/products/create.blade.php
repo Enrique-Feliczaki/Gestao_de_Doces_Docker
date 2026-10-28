@@ -149,6 +149,12 @@
                 </div>
             @endif
 
+            @if (session('success'))
+                <div class="success" data-cy="mensagem-sucesso">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             <form action="{{ route('products.store') }}" method="POST">
                 @csrf
 
@@ -158,6 +164,7 @@
                         type="text"
                         id="name"
                         name="name"
+                        data-cy="nome-produto"
                         value="{{ old('name') }}"
                         required
                     >
@@ -168,7 +175,12 @@
 
                 <div class="field">
                     <label for="category">Categoria *</label>
-                    <select id="category" name="category" required>
+                    <select
+                        id="category"
+                        name="category"
+                        data-cy="categoria-produto"
+                        required
+                    >
                         <option value="">Selecione uma categoria</option>
                         <option value="Bolos" {{ old('category') == 'Bolos' ? 'selected' : '' }}>Bolos</option>
                         <option value="Doces" {{ old('category') == 'Doces' ? 'selected' : '' }}>Doces</option>
@@ -197,6 +209,7 @@
                         type="number"
                         id="price"
                         name="price"
+                        data-cy="preco-produto"
                         min="0.01"
                         step="0.01"
                         value="{{ old('price') }}"
@@ -213,6 +226,7 @@
                         type="number"
                         id="stock_quantity"
                         name="stock_quantity"
+                        data-cy="estoque-produto"
                         min="0"
                         step="1"
                         value="{{ old('stock_quantity', 0) }}"
@@ -229,6 +243,7 @@
                         type="number"
                         id="minimum_stock"
                         name="minimum_stock"
+                        data-cy="estoque-minimo-produto"
                         min="0"
                         step="1"
                         value="{{ old('minimum_stock', 0) }}"
@@ -240,7 +255,11 @@
                 </div>
 
                 <div class="actions">
-                    <button type="submit" class="button primary">
+                    <button
+                        type="submit"
+                        class="button primary"
+                        data-cy="salvar-produto"
+                    >
                         Salvar produto
                     </button>
 

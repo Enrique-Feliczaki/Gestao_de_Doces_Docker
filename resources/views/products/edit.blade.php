@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -108,8 +109,10 @@
 <body>
     <main class="container">
         @include('layouts.navigation')
+
         <div class="card">
             <h1>Editar produto</h1>
+
             <p class="subtitle">
                 Atualize os dados de {{ $product->name }}.
             </p>
@@ -130,6 +133,7 @@
                         type="text"
                         id="name"
                         name="name"
+                        data-cy="nome-produto"
                         value="{{ old('name', $product->name) }}"
                         required
                     >
@@ -155,6 +159,7 @@
                         type="number"
                         id="price"
                         name="price"
+                        data-cy="preco-produto"
                         min="0.01"
                         step="0.01"
                         value="{{ old('price', $product->price) }}"
@@ -171,6 +176,7 @@
                         type="number"
                         id="stock_quantity"
                         name="stock_quantity"
+                        data-cy="estoque-produto"
                         min="0"
                         step="1"
                         value="{{ old('stock_quantity', $product->stock_quantity) }}"
@@ -182,11 +188,18 @@
                 </div>
 
                 <div class="actions">
-                    <button type="submit" class="button primary">
+                    <button
+                        type="submit"
+                        class="button primary"
+                        data-cy="salvar-produto"
+                    >
                         Salvar alterações
                     </button>
 
-                    <a href="{{ route('products.index') }}" class="button secondary">
+                    <a
+                        href="{{ route('products.index') }}"
+                        class="button secondary"
+                    >
                         Cancelar
                     </a>
                 </div>

@@ -1,3 +1,4 @@
+
 <?php
 
 namespace App\Models;
@@ -5,15 +6,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-
 class Product extends Model
 {
-    protected $fillable = [
+        protected $fillable = [
         'name',
         'category',
         'description',
         'price',
         'stock_quantity',
+        'minimum_stock',
     ];
 
     protected function casts(): array
@@ -21,6 +22,7 @@ class Product extends Model
         return [
             'price' => 'decimal:2',
             'stock_quantity' => 'integer',
+            'minimum_stock' => 'integer',
         ];
     }
 
@@ -29,12 +31,8 @@ class Product extends Model
         return $this->hasMany(SaleItem::class);
     }
 
-    
     public function stockMovements(): HasMany
     {
         return $this->hasMany(StockMovement::class);
     }
-
-    
 }
-

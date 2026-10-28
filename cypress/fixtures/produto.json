@@ -1,0 +1,10 @@
+
+{
+  "name": "Brigadeiro de Teste",
+  "category": "Doces",
+  "description": "Produto cadastrado por teste automatizado",
+  "price": "10.00",
+  "stock_quantity": 2,
+  "minimum_stock": 5
+}
+  

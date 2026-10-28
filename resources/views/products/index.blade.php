@@ -109,6 +109,17 @@
             border-radius: 20px;
         }
 
+        .estoque-baixo {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 5px 9px;
+            border-radius: 20px;
+            background: #fee2e2;
+            color: #b42318;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
         .mensagem {
             margin-bottom: 20px;
             padding: 14px;
@@ -239,6 +250,13 @@
                                     <span class="estoque">
                                         {{ $product->stock_quantity }} unidades
                                     </span>
+
+                                    @if ($product->stock_quantity < $product->minimum_stock)
+                                        <br>
+                                        <span class="estoque-baixo" data-cy="alerta-estoque-baixo">
+                                            Estoque baixo
+                                        </span>
+                                    @endif
                                 </td>
 
                                 <td>
@@ -246,6 +264,7 @@
                                         <a
                                             class="link"
                                             href="{{ route('products.edit', $product) }}"
+                                            data-cy="editar-produto"
                                         >
                                             Editar
                                         </a>
@@ -253,12 +272,12 @@
                                         <form
                                             action="{{ route('products.destroy', $product) }}"
                                             method="POST"
-                                            onsubmit="return confirm('Deseja realmente excluir este produto?')"
-                                        >
+                                           
+                                        >   
                                             @csrf
                                             @method('DELETE')
 
-                                            <button class="excluir" type="submit">
+                                            <button type="submit" data-cy="excluir-produto">
                                                 Excluir
                                             </button>
                                         </form>
