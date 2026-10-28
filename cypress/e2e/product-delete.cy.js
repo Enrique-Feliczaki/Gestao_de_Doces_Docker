@@ -1,56 +1,39 @@
+import ProductFormPage from '../support/pages/ProductFormPage';
+import ProductListPage from '../support/pages/ProductListPage';
 
 describe('Exclusão de produto', () => {
-  const nomeProduto = `Produto Exclusao Cypress ${Date.now()}`;
-
-  beforeEach(() => {
-    cy.visit('/products/create');
-  });
+  const form = new ProductFormPage();
+  const list = new ProductListPage();
 
   it('deve cadastrar e excluir um produto de teste', () => {
-    // Cadastra um produto exclusivo para este teste
-    cy.get('[data-cy="nome-produto"]')
-      .type(nomeProduto);
+    const nomeProduto = `Produto Exclusao Cypress ${Date.now()}`;
 
-    cy.get('[data-cy="categoria-produto"]')
-      .find('option')
-      .then(($options) => {
-        const categoria = [...$options].find(
-          (option) => option.value !== '' && !option.disabled
-        );
+    cy.fixture('produto.json').then((produto) => {
+      const produtoTeste = {
+        ...produto,
+        name: nomeProduto,
+        price: '12.50',
+        stock_quantity: 5,
+        minimum_stock: 0,
+      };
 
-        expect(categoria, 'categoria disponível').to.exist;
+      form.visitCreate();
+      form.fill(produtoTeste);
+      form.submit();
 
-        cy.get('[data-cy="categoria-produto"]')
-          .select(categoria.value);
+      cy.location('pathname').should('eq', '/products');
+      list.rowByName(nomeProduto).should('be.visible');
+
+      // Intercepta e aceita a confirmação nativa do navegador.
+      cy.on('window:confirm', (mensagem) => {
+        expect(mensagem).to.be.a('string');
+        return true;
       });
 
-    cy.get('[data-cy="preco-produto"]')
-      .clear()
-      .type('12.50');
+      list.deleteProduct(nomeProduto);
 
-    cy.get('[data-cy="estoque-produto"]')
-      .clear()
-      .type('5');
-
-    cy.get('[data-cy="salvar-produto"]').click();
-
-    // Confirma que o cadastro foi concluído
-    cy.location('pathname').should('eq', '/products');
-
-    cy.contains(nomeProduto).should('be.visible');
-
-    // Aceita automaticamente a confirmação nativa do navegador,
-    // caso a aplicação utilize window.confirm()
-    cy.on('window:confirm', () => true);
-
-    // Localiza a linha do produto de teste e o exclui
-    cy.contains('tr', nomeProduto)
-      .find('[data-cy="excluir-produto"]')
-      .click();
-
-    // Valida que o produto foi removido da listagem
-    cy.location('pathname').should('eq', '/products');
-
-    cy.contains(nomeProduto).should('not.exist');
+      cy.location('pathname').should('eq', '/products');
+      list.rowByName(nomeProduto).should('not.exist');
+    });
   });
 });

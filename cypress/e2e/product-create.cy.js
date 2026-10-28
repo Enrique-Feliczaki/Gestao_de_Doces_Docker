@@ -1,19 +1,23 @@
+
+import ProductFormPage from '../support/pages/ProductFormPage';
+
 describe('Formulário de novo produto', () => {
+  const form = new ProductFormPage();
+
   it('deve abrir o formulário e exibir os campos obrigatórios', () => {
     cy.visit('/products');
-
     cy.contains('a', 'Novo produto').click();
 
     cy.url().should('include', '/products/create');
 
-    cy.get('#name').should('be.visible');
+    cy.get(form.selectors.name).should('be.visible');
 
-    cy.get('#category')
+    cy.get(form.selectors.category)
       .should('be.visible')
       .and('have.prop', 'tagName', 'SELECT');
 
-    cy.get('#price').should('be.visible');
-    cy.get('#stock_quantity').should('be.visible');
-    cy.get('#minimum_stock').should('be.visible');
+    cy.get(form.selectors.price).should('be.visible');
+    cy.get(form.selectors.stock).should('be.visible');
+    cy.get(form.selectors.minimumStock).should('be.visible');
   });
 });

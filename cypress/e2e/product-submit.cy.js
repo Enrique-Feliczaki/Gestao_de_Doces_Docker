@@ -1,43 +1,30 @@
 
+import ProductFormPage from '../support/pages/ProductFormPage';
+
 describe('Cadastro de produto', () => {
+  const form = new ProductFormPage();
+
   beforeEach(() => {
     cy.visit('/products/create');
   });
 
   it('deve cadastrar um produto com sucesso', () => {
-    cy.get('[data-cy="nome-produto"]')
-      .type('Produto Teste Cypress');
+    cy.fixture('produto.json').then((produto) => {
+      const produtoTeste = {
+        ...produto,
+        name: `${produto.name} ${Date.now()}`,
+      };
 
-    // Seleciona a primeira categoria disponível.
-    cy.get('[data-cy="categoria-produto"]')
-      .find('option')
-      .then(($options) => {
-        const categoria = [...$options].find(
-          (option) => option.value !== '' && !option.disabled
-        );
+      cy.fillProductForm(produtoTeste);
+        cy.submitProductForm();
 
-        expect(categoria, 'categoria disponível').to.exist;
+      cy.location('pathname').should('eq', '/products');
 
-        cy.get('[data-cy="categoria-produto"]')
-          .select(categoria.value);
-      });
+      cy.get('.mensagem')
+        .should('be.visible')
+        .and('contain.text', 'sucesso');
 
-    cy.get('[data-cy="preco-produto"]')
-      .clear()
-      .type('15.50');
-
-    cy.get('[data-cy="estoque-produto"]')
-      .clear()
-      .type('20');
-
-    cy.get('button[type="submit"]').click();
-
-    // Confirma o redirecionamento para a listagem.
-    cy.location('pathname').should('eq', '/products');
-
-    // Confirma a mensagem de sucesso.
-    cy.get('.mensagem')
-      .should('be.visible')
-      .and('contain.text', 'sucesso');
+      cy.contains('tbody tr', produtoTeste.name).should('exist');
+    });
   });
 });

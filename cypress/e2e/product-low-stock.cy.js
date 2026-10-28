@@ -1,69 +1,64 @@
 
+import ProductFormPage from '../support/pages/ProductFormPage';
+import ProductListPage from '../support/pages/ProductListPage';
+
 describe('Alerta de estoque baixo', () => {
-  const identificador = Date.now();
-  const nomeEstoqueBaixo = `Produto Estoque Baixo ${identificador}`;
-  const nomeEstoqueNormal = `Produto Estoque Normal ${identificador}`;
-
-  function cadastrarProduto(nome, estoque, estoqueMinimo) {
-    cy.visit('/products/create');
-
-    cy.get('[data-cy="nome-produto"]').type(nome);
-
-    cy.get('[data-cy="categoria-produto"]')
-      .find('option')
-      .then(($options) => {
-        const categoria = [...$options].find(
-          (option) => option.value !== '' && !option.disabled
-        );
-
-        expect(categoria, 'categoria disponível').to.exist;
-
-        cy.get('[data-cy="categoria-produto"]')
-          .select(categoria.value);
-      });
-
-    cy.get('[data-cy="preco-produto"]').clear().type('10.00');
-    cy.get('[data-cy="estoque-produto"]').clear().type(String(estoque));
-    cy.get('[data-cy="estoque-minimo-produto"]').clear().type(String(estoqueMinimo));
-
-    cy.get('[data-cy="salvar-produto"]').click();
-
-    cy.location('pathname').should('eq', '/products');
-  }
+  const form = new ProductFormPage();
+  const list = new ProductListPage();
 
   it('deve exibir o alerta para estoque baixo e não exibi-lo para estoque normal', () => {
-    // Cadastra produto com estoque abaixo do mínimo
-    cadastrarProduto(nomeEstoqueBaixo, 2, 5);
+    cy.fixture('produto.json').then((produto) => {
+      const identificador = Date.now();
 
-    cy.get('[data-cy="tabela-produtos"]').should('exist');
+      const produtoEstoqueBaixo = {
+        ...produto,
+        name: `Produto Estoque Baixo ${identificador}`,
+        stock_quantity: 2,
+        minimum_stock: 5,
+      };
 
-    cy.contains('tbody tr', nomeEstoqueBaixo)
-      .should('exist')
-      .within(() => {
-        cy.get('[data-cy="alerta-estoque-baixo"]')
-          .should('be.visible')
-          .and('contain.text', 'Estoque baixo');
-      });
+      const produtoEstoqueNormal = {
+        ...produto,
+        name: `Produto Estoque Normal ${identificador}`,
+        stock_quantity: 10,
+        minimum_stock: 5,
+      };
 
-    // Cadastra produto com estoque acima do mínimo
-    cadastrarProduto(nomeEstoqueNormal, 10, 5);
+      function cadastrarProduto(dados) {
+        form.visitCreate();
+        cy.fillProductForm(dados);
+        cy.submitProductForm();
 
-    cy.contains('tbody tr', nomeEstoqueNormal)
-      .should('exist')
-      .within(() => {
-        cy.get('[data-cy="alerta-estoque-baixo"]')
-          .should('not.exist');
-      });
+        cy.location('pathname').should('eq', '/products');
+      }
 
-    // Limpa os produtos criados pelo teste
-    cy.on('window:confirm', () => true);
+      cadastrarProduto(produtoEstoqueBaixo);
 
-    cy.contains('tbody tr', nomeEstoqueBaixo)
-      .find('[data-cy="excluir-produto"]')
-      .click();
+      cy.get(list.selectors.table).should('exist');
 
-    cy.contains('tbody tr', nomeEstoqueNormal)
-      .find('[data-cy="excluir-produto"]')
-      .click();
+      list.rowByName(produtoEstoqueBaixo.name)
+        .should('exist')
+        .within(() => {
+          cy.get(list.selectors.lowStockAlert)
+            .should('be.visible')
+            .and('contain.text', 'Estoque baixo');
+        });
+
+      cadastrarProduto(produtoEstoqueNormal);
+
+      list.rowByName(produtoEstoqueNormal.name)
+        .should('exist')
+        .within(() => {
+          cy.get(list.selectors.lowStockAlert).should('not.exist');
+        });
+
+      cy.on('window:confirm', () => true);
+
+      list.deleteProduct(produtoEstoqueBaixo.name);
+      list.rowByName(produtoEstoqueBaixo.name).should('not.exist');
+
+      list.deleteProduct(produtoEstoqueNormal.name);
+      list.rowByName(produtoEstoqueNormal.name).should('not.exist');
+    });
   });
 });
