@@ -1,4 +1,3 @@
-
 <?php
 
 namespace Tests\Feature;
@@ -7,10 +6,10 @@ use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-    public function test_the_application_returns_a_successful_response(): void
+    public function test_rota_inicial_retornar_status_200(): void
     {
         $response = $this->get('/');
 
-        $response->assertOk();
+        $response->assertStatus(200);
     }
 }

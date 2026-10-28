@@ -5,9 +5,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\StockController;
 
-Route::get('/', function () {
-    return redirect()->route('products.index');
-});
+Route::get('/', [ProductController::class, 'index'])
+    ->name('home');
 
 Route::resource('products', ProductController::class);
 
