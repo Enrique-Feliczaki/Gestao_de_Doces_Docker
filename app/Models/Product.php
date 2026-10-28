@@ -10,6 +10,7 @@ class Product extends Model
 {
     protected $fillable = [
         'name',
+        'category',
         'description',
         'price',
         'stock_quantity',
@@ -34,4 +35,6 @@ class Product extends Model
         return $this->hasMany(StockMovement::class);
     }
 
+    
 }
+

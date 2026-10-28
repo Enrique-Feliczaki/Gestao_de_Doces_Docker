@@ -1,3 +1,4 @@
+﻿
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -163,7 +164,7 @@
 </head>
 <body>
     <header>
-        <h1>Doces Gestão</h1>
+        <h1>Doce Gestão</h1>
         <p>Gerenciamento do negócio</p>
     </header>
 
@@ -176,7 +177,11 @@
                 <p>Gerencie os produtos e acompanhe o estoque.</p>
             </div>
 
-            <a href="{{ route('products.create') }}" class="botao">
+            <a
+                href="{{ route('products.create') }}"
+                class="botao"
+                data-cy="novo-produto"
+            >
                 + Novo produto
             </a>
         </div>
@@ -198,15 +203,17 @@
                     </p>
                 </div>
             @else
-                <table>
+                <table data-cy="tabela-produtos">
                     <thead>
                         <tr>
-                            <th>Produto</th>
-                            <th>Preço</th>
-                            <th>Estoque</th>
+                            <th data-cy="coluna-produto">Produto</th>
+                            <th data-cy="coluna-categoria">Categoria</th>
+                            <th data-cy="coluna-preco">Preço</th>
+                            <th data-cy="coluna-estoque">Estoque</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         @foreach ($products as $product)
                             <tr>
@@ -218,6 +225,10 @@
                                             {{ $product->description }}
                                         </p>
                                     @endif
+                                </td>
+
+                                <td>
+                                    {{ $product->category ?? 'Sem categoria' }}
                                 </td>
 
                                 <td>

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -50,12 +51,14 @@
             font-weight: bold;
         }
 
-        input, textarea {
+        input, textarea, select {
             width: 100%;
             padding: 12px;
             border: 1px solid #d1d5db;
             border-radius: 6px;
             font-size: 15px;
+            background: #fff;
+            color: #333;
         }
 
         textarea {
@@ -110,14 +113,35 @@
         .secondary:hover {
             background: #d1d5db;
         }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 12px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .button {
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
     <main class="container">
         @include('layouts.navigation')
+
         <div class="card">
             <h1>Novo produto</h1>
-            <p class="subtitle">Preencha os dados para cadastrar um produto.</p>
+            <p class="subtitle">
+                Preencha os dados para cadastrar um produto.
+            </p>
 
             @if ($errors->any())
                 <div class="error">
@@ -138,6 +162,20 @@
                         required
                     >
                     @error('name')
+                        <div class="error">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="field">
+                    <label for="category">Categoria *</label>
+                    <select id="category" name="category" required>
+                        <option value="">Selecione uma categoria</option>
+                        <option value="Bolos" {{ old('category') == 'Bolos' ? 'selected' : '' }}>Bolos</option>
+                        <option value="Doces" {{ old('category') == 'Doces' ? 'selected' : '' }}>Doces</option>
+                        <option value="Salgados" {{ old('category') == 'Salgados' ? 'selected' : '' }}>Salgados</option>
+                        <option value="Bebidas" {{ old('category') == 'Bebidas' ? 'selected' : '' }}>Bebidas</option>
+                    </select>
+                    @error('category')
                         <div class="error">{{ $message }}</div>
                     @enderror
                 </div>
@@ -185,12 +223,31 @@
                     @enderror
                 </div>
 
+                <div class="field">
+                    <label for="minimum_stock">Estoque mínimo *</label>
+                    <input
+                        type="number"
+                        id="minimum_stock"
+                        name="minimum_stock"
+                        min="0"
+                        step="1"
+                        value="{{ old('minimum_stock', 0) }}"
+                        required
+                    >
+                    @error('minimum_stock')
+                        <div class="error">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 <div class="actions">
                     <button type="submit" class="button primary">
                         Salvar produto
                     </button>
 
-                    <a href="{{ route('products.index') }}" class="button secondary">
+                    <a
+                        href="{{ route('products.index') }}"
+                        class="button secondary"
+                    >
                         Cancelar
                     </a>
                 </div>
@@ -199,4 +256,3 @@
     </main>
 </body>
 </html>
-```

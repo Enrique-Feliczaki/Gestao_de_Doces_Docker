@@ -1,8 +1,6 @@
-
-describe('Página inicial do Doces Gestão', () => {
-  it('deve carregar a página inicial com sucesso', () => {
+﻿describe('Página inicial do Doces Gestão', () => {
+  it('deve exibir o texto Doce Gestão', () => {
     cy.visit('/');
-
-    cy.get('body').should('be.visible');
+    cy.contains('Doce Gestão').should('be.visible');
   });
 });
